@@ -7,6 +7,8 @@ import com.example.BusReservationSystem.Repository.BusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class BookingService {
@@ -34,38 +36,38 @@ public class BookingService {
             return "Invalid Seat Number";
         }
 
-        boolean seatExists = bookingRepo.existsByBusNoAndDateAndSeatNo(
-                booking.getBusNo(),
-                booking.getDate(),
-                booking.getSeatNo()
-        );
+        boolean seatExists = bookingRepo.existsByBusNoAndDateAndSeatNo(booking.getBusNo(), booking.getDate(), booking.getSeatNo());
 
         if (seatExists) {
             return "Seat already booked!";
-        }
-
-        int booked = bookingRepo.countByBusNoAndDate(
-                booking.getBusNo(),
-                booking.getDate()
-        );
-
-        if (booked >= bus.getCapacity()) {
-            return "Bus Full";
         }
 
         bookingRepo.save(booking);
 
         reminderService.addToCache(booking);
 
-        paymentService.processPayment(
-                booking.getBookingId(),
-                bus.getTicketPrice(),
-                booking.getMethod()
-        );
+        paymentService.processPayment(booking.getBookingId(), bus.getTicketPrice(), booking.getMethod());
 
         return "Booking Successful";
     }
+    public List<Booking> getBookingHistory(String passengerNumber) {
+        return bookingRepo.findByPassengerNumber(passengerNumber);
+    }
+    public String updateBoardingPoint(int bookingId, String newBoardingPoint) {
 
+        Booking booking = bookingRepo.findById(bookingId).orElse(null);
+
+        if (booking == null) {
+            return "Booking Not Found";
+        }
+
+        booking.setBoardingPoint(newBoardingPoint);
+
+        bookingRepo.save(booking);
+        reminderService.updateCache(booking);
+
+        return "Boarding Point Updated Successfully";
+    }
     public String cancelTicket(int bookingId) {
 
         if (!bookingRepo.existsById(bookingId)) {
