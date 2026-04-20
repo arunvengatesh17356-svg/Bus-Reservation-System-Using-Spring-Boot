@@ -20,10 +20,18 @@ public class ReminderService {
 
     private List<Booking> cachedBookings = new ArrayList<>();
 
+    public static final String RESET = "\u001B[0m";
+    public static final String RED = "\u001B[31m";
+    public static final String PINK = "\u001B[95m";
+    public static final String CORAL = "\u001B[38;2;255;127;80m";
+    public static final String SKY_BLUE = "\u001B[36m";
+    public static final String YELLOW = "\u001B[33m";
+
     @PostConstruct
     public void loadData() {
         cachedBookings = bookingRepo.findAll();
-        System.out.println("Bookings loaded: " + cachedBookings.size());
+
+        System.out.println(PINK + "Bookings loaded: " + cachedBookings.size() + RESET);
     }
 
     @Scheduled(fixedRate = 1000)
@@ -32,14 +40,12 @@ public class ReminderService {
         try {
             LocalDate today = LocalDate.now();
             LocalTime now = LocalTime.now();
-            LocalTime nextTime = now.plusSeconds(5); // safe window
+            LocalTime nextTime = now.plusSeconds(5);
 
             for (Booking booking : cachedBookings) {
 
                 try {
-                    if (booking.getDate() == null ||
-                            booking.getTravelTime() == null ||
-                            booking.isNotified()) {
+                    if (booking.getDate() == null || booking.getTravelTime() == null || booking.isNotified()) {
                         continue;
                     }
 
@@ -49,18 +55,13 @@ public class ReminderService {
 
                     LocalTime travelTime = booking.getTravelTime();
 
+
                     if (!travelTime.isBefore(now) &&
                             travelTime.isBefore(nextTime)) {
 
-                        System.err.println(" Reminder: Dear "
-                                + booking.getPassengerName()
-                                + ", your bus (Bus No: "
-                                + booking.getBusNo()
-                                + ") is scheduled at "
-                                + travelTime);
+                        System.out.println(SKY_BLUE+ "Reminder: Dear " + booking.getPassengerName() + ", your bus (Bus No: " + booking.getBusNo() + ") is scheduled at " + travelTime + RESET);
 
                         booking.setNotified(true);
-
                         bookingRepo.save(booking);
                     }
 
@@ -70,23 +71,18 @@ public class ReminderService {
                             oneHourBefore.isBefore(nextTime) &&
                             !booking.isNotified()) {
 
-                        System.out.println(" Reminder: Dear "
-                                + booking.getPassengerName()
-                                + ", your bus (Bus No: "
-                                + booking.getBusNo()
-                                + ") will start in 1 hour!");
-
+                        System.out.println(CORAL+ "Reminder: Dear " + booking.getPassengerName() + ", your bus (Bus No: " + booking.getBusNo() + ") will start in 1 hour!" + RESET);
                     }
 
                 } catch (Exception e) {
-                    System.out.println(" Error processing booking ID: "
-                            + booking.getBookingId());
+
+                    System.out.println(YELLOW + "Error processing booking ID: " + booking.getBookingId() + RESET);
                     e.printStackTrace();
                 }
             }
 
         } catch (Exception e) {
-            System.out.println(" Scheduler failed!");
+            System.out.println(RED + "Scheduler failed!" + RESET);
             e.printStackTrace();
         }
     }
@@ -98,6 +94,7 @@ public class ReminderService {
     public void removeFromCache(int id) {
         cachedBookings.removeIf(b -> b.getBookingId() == id);
     }
+
     public void updateCache(Booking updated) {
         for (int i = 0; i < cachedBookings.size(); i++) {
             if (cachedBookings.get(i).getBookingId() == updated.getBookingId()) {
