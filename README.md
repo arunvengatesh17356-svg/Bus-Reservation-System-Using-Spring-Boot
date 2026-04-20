@@ -28,6 +28,7 @@ It provides REST APIs to handle booking, cancellation, payment processing, and t
 
 ---
 
+## 🗂️ Project Structure
 src/main/java/com/example/BusReservationSystem/
 
 ├── Controller
