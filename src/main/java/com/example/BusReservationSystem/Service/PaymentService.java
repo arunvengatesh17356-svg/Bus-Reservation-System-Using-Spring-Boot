@@ -22,7 +22,7 @@ public class PaymentService {
         } else if (method.equalsIgnoreCase("UPI")) {
             payment.setStatus("SUCCESS");
         } else if (method.equalsIgnoreCase("CASH")) {
-            payment.setStatus("PENDING");
+            payment.setStatus("SUCCESS");
         } else {
             payment.setStatus("FAILED");
         }
