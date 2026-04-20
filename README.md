@@ -1,88 +1,134 @@
-# 🚌 Bus Reservation System using Spring Boot
+# 🚌 Bus Reservation System (Spring Boot)
 
-📌 Overview  
-This is a backend-based Bus Reservation System developed using Java and Spring Boot.  
-The system allows users to book bus tickets, manage bookings, and perform operations using REST APIs.
-
----
-
-🚀 Features  
-Book bus tickets  
-View booking details  
-Delete bookings  
-REST API implementation  
-Date and time handling using Java 8  
+## 📌 Overview
+This is a backend-based Bus Reservation System built using Java and Spring Boot.  
+It provides REST APIs to handle booking, cancellation, payment processing, and travel reminders.
 
 ---
 
-🛠️ Technologies Used  
-Java  
-Spring Boot  
-Spring Web  
-JDBC  
-MySQL  
-Maven  
-Postman  
+## 🚀 Features
+- 🎟️ Book bus tickets  
+- 📄 View booking history  
+- ✏️ Update boarding point  
+- ❌ Cancel bookings  
+- 💳 Payment processing (Card / UPI / Cash)  
+- ⏰ Automated reminders using Scheduler  
+- 🚫 Prevent duplicate seat booking  
 
 ---
 
-📂 Project Structure  
-BookingController.java  
-BookingService.java  
-BookingRepository.java  
-Booking.java  
-JacksonConfig.java  
+## 🛠️ Technologies Used
+- Java  
+- Spring Boot  
+- Spring Data JPA  
+- MySQL  
+- Maven  
+- Lombok  
+- Postman  
 
 ---
 
-📡 API Endpoints  
+src/main/java/com/example/BusReservationSystem/
 
-➤ Book Ticket  
-POST /api/book  
+├── Controller
+│ └── BookingController.java
 
-➤ Delete Booking  
-DELETE /api/delete/{id}  
+├── Entity
+│ ├── Booking.java
+│ ├── Bus.java
+│ └── Payment.java
 
-➤ Welcome API  
-GET /api  
+├── Repository
+│ ├── BookingRepository.java
+│ ├── BusRepository.java
+│ └── PaymentRepository.java
 
----
+├── Service
+│ ├── BookingService.java
+│ ├── PaymentService.java
+│ └── ReminderService.java
 
-🧾 Database Table  
+└── BusReservationSystemApplication.java
 
-Booking Table  
-
-CREATE TABLE booking (  
-    booking_id INT PRIMARY KEY,  
-    passenger_name VARCHAR(50),  
-    age INT,  
-    gender VARCHAR(10),  
-    bus_no VARCHAR(20),  
-    travel_date DATE,  
-    travel_time TIME  
-);  
 
 ---
 
-🔄 Program Flow  
-User sends booking request using API  
-Data is processed in service layer  
-Booking is stored in database  
-User can delete booking using ID  
+## ⚙️ Setup & Installation
 
----
+### 1. Clone Repository
+```bash
+git clone https://github.com/your-username/bus-reservation-system.git
+cd bus-reservation-system
 
-⚙️ How to Run  
+Run Application
+mvn spring-boot:run
 
-Clone the project  
-Open in IDE (IntelliJ / Eclipse)  
-Configure MySQL database  
-Update application.properties  
-Run Spring Boot application  
-Test APIs using Postman  
+🏠 Home
+GET /home
 
----
+🎟️ Book Ticket
+POST /home/book
 
-👨‍💻 Author  
+Sample Request
+{
+  "bookingId": 1,
+  "passengerName": "Arun",
+  "age": 22,
+  "gender": "Male",
+  "passengerNumber": "9876543210",
+  "busNo": 101,
+  "boardingPoint": "Chennai",
+  "droppingPoint": "Bangalore",
+  "date": "25-04-2026",
+  "seatNo": 5,
+  "travelTime": "10:30:00",
+  "method": "UPI"
+}
+📄 Booking History
+GET /home/history/{phone}
 
-Arun Vengatesh  
+✏️ Update Boarding Point
+PUT /home/update-boarding/{id}?boardingPoint=NewLocation
+
+❌ Cancel Ticket
+DELETE /home/cancel/{id}
+
+💳 Payment Logic
+CARD → SUCCESS
+UPI → SUCCESS
+CASH → SUCCESS
+Others → FAILED
+
+⏰ Reminder System
+Runs every 1 second
+Sends:
+Reminder at travel time
+Reminder 1 hour before travel
+Uses in-memory cache for fast processing
+
+🧠 Business Logic
+Validates seat availability
+Prevents duplicate booking
+Auto processes payment
+Auto schedules reminders
+
+🧪 Testing
+
+Use Postman to test APIs.
+
+⭐ Future Improvements
+JWT Authentication
+Frontend Integration
+Email/SMS Notifications
+Admin Dashboard
+
+👨‍💻 Author
+
+Arun Vengatesh
+
+
+
+
+
+
+## 📂 Project Structure
