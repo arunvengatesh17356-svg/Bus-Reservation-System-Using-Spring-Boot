@@ -126,10 +126,3 @@ Admin Dashboard
 👨‍💻 Author
 
 Arun Vengatesh
-
-
-
-
-
-
-## 📂 Project Structure
